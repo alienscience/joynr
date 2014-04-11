@@ -136,9 +136,16 @@ public class «typeName»«IF hasExtendsDeclaration(complexType)» extends «get
 				if (other.«member.joynrName» != null) {
 					return false;
 				}
-			} else if (!this.«member.joynrName».equals(other.«member.joynrName»)){
-				return false;
-			}
+				
+			«IF isByteBuffer(member.type)»
+				} else if (!java.util.Arrays.equals(this.«member.joynrName», other.«member.joynrName»)){
+					return false;
+				}
+			«ELSE»
+				} else if (!this.«member.joynrName».equals(other.«member.joynrName»)){
+					return false;
+				}
+			«ENDIF»
 		«ENDFOR»
 		return true;
 	}
@@ -154,7 +161,11 @@ public class «typeName»«IF hasExtendsDeclaration(complexType)» extends «get
 		final int prime = 31;
 		«ENDIF»
 		«FOR member : getMembers(complexType)»
-			result = prime * result + ((this.«member.joynrName» == null) ? 0 : this.«member.joynrName».hashCode());
+			«IF isByteBuffer(member.type)»
+				_result = prime * _result + ((this.«member.joynrName» == null) ? 0 : java.util.Arrays.hashCode(this.«member.joynrName»));
+			«ELSE»
+				_result = prime * _result + ((this.«member.joynrName» == null) ? 0 : this.«member.joynrName».hashCode());
+			«ENDIF»
 		«ENDFOR»
 		return result;
 	}
