@@ -89,6 +89,10 @@ void HttpCommunicationManager::updateSettings() {
     if(settings.getHttpDebug()) {
         HttpNetworking::getInstance()->setHTTPDebugOn();
     }
+
+    // Set the connect timeout
+    HttpNetworking::getInstance()->setConnectTimeout_ms(settings.getHttpConnectTimeout());
+
 }
 
 
