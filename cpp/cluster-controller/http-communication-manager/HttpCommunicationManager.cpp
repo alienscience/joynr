@@ -89,6 +89,11 @@ void HttpCommunicationManager::updateSettings() {
     if(settings.getHttpDebug()) {
         HttpNetworking::getInstance()->setHTTPDebugOn();
     }
+
+    // HTTPS settings
+    HttpNetworking::getInstance()->setCertificateAuthority(settings.getCertificateAuthority());
+    HttpNetworking::getInstance()->setClientCertificate(settings.getClientCertificate());
+    HttpNetworking::getInstance()->setClientCertificatePassword(settings.getClientCertificatePassword());
 }
 
 

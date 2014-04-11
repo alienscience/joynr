@@ -36,6 +36,9 @@ HttpNetworking* HttpNetworking::httpNetworking = new HttpNetworking();
 HttpNetworking::HttpNetworking() :
     curlHandlePool(NULL),
     proxy(),
+    certificateAuthority(),
+    clientCertificate(),
+    clientCertificatePassword(),
     httpDebug(false)
 {
     curl_global_init(CURL_GLOBAL_ALL);
@@ -56,6 +59,20 @@ HttpRequestBuilder* HttpNetworking::createRequestBuilder(const QString& url) {
     if (httpDebug) {
         requestBuilder->withDebug();
     }
+
+    // Check for HTTPS options
+    if (!certificateAuthority.isEmpty()) {
+        requestBuilder->withCertificateAuthority(certificateAuthority);
+    }
+
+    if (!clientCertificate.isEmpty()) {
+        requestBuilder->withClientCertificate(clientCertificate);
+    }
+
+    if (!clientCertificatePassword.isEmpty()) {
+        requestBuilder->withClientCertificatePassword(clientCertificatePassword);
+    }
+
     return requestBuilder;
 }
 
@@ -73,9 +90,7 @@ IHttpPostBuilder* HttpNetworking::createHttpPostBuilder(const QString& url) {
 
 IHttpPostBuilder::~IHttpPostBuilder()
 {
-
 }
-
 
 void HttpNetworking::setGlobalProxy(const QString& proxy) {
     this->proxy = proxy;
@@ -84,6 +99,22 @@ void HttpNetworking::setGlobalProxy(const QString& proxy) {
 void HttpNetworking::setHTTPDebugOn() {
     this->httpDebug = true;
 }
+
+void HttpNetworking::setCertificateAuthority(const QString& certificateAuthority)
+{
+    this->certificateAuthority = certificateAuthority;
+}
+
+void HttpNetworking::setClientCertificate(const QString& clientCertificate)
+{
+    this->clientCertificate = clientCertificate;
+}
+
+void HttpNetworking::setClientCertificatePassword(const QString& clientCertificatePassword)
+{
+    this->clientCertificatePassword = clientCertificatePassword;
+}
+
 
 ICurlHandlePool* HttpNetworking::getCurlHandlePool() {
     return curlHandlePool;
